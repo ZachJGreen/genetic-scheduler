@@ -6,7 +6,7 @@ class Activity:
     facilitators = ["Lock", "Glen", "Banks", "Richards", "Shaw", "Singer", "Uther", "Tyler", "Numen", "Zeldin"]
 
     def __init__(self, activity):
-        self.activity = activity
+        self.name = activity
 
     def roll(self):
         self.room = random.choice(self.rooms)
