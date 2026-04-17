@@ -1,20 +1,20 @@
-# Issue 2
+# Issue 2 https://github.com/ZachJGreen/genetic-scheduler/issues/2
 def fitness_calculate_final_score():
     return 0
 
-# Issue 6
+# Issue 6 https://github.com/ZachJGreen/genetic-scheduler/issues/6
 def fitness_facilitator_load_check():
     return 0
 
-# Issue 5
+# Issue 5 https://github.com/ZachJGreen/genetic-scheduler/issues/5
 def fitness_activity_facilitator_check():
     return 0
 
-# Issue 4
+# Issue 4 https://github.com/ZachJGreen/genetic-scheduler/issues/4
 def fitness_room_capacity_check():
     return 0
 
-# Issue 3
+# Issue 3 https://github.com/ZachJGreen/genetic-scheduler/issues/3
 def fitness_time_conflict_check():
     return 0
 
