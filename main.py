@@ -1,5 +1,5 @@
 from schedule import Schedule
-
+import fitness.fitness_function as fitness_function
 def main():
     schedule = Schedule()
     schedule.generate_schedule()
