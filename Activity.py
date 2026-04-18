@@ -83,10 +83,7 @@ ACTIVITIES = {
 
 
 class Activity:
-    """
-    Represents one scheduled activity with a randomly assigned
-    room, time, and facilitator.
-    """
+
 
     def __init__(self, name: str):
         if name not in ACTIVITIES:
