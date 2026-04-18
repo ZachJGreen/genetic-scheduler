@@ -98,17 +98,13 @@ class Activity:
         self.facilitator = None
 
     def roll(self) -> None:
-        """
-        Randomly assign one valid room, time, and facilitator.
-        """
+       
         self.room = random.choice(list(ROOMS.keys()))
         self.time = random.choice(TIMES)
         self.facilitator = random.choice(FACILITATORS)
 
     def to_dict(self) -> dict:
-        """
-        Convert this Activity object into dictionary form.
-        """
+      
         return {
             "room": self.room,
             "time": self.time,
@@ -117,12 +113,7 @@ class Activity:
 
 
 def create_random_schedule() -> dict:
-    """
-    Create one full random schedule.
-    
-    Returns:
-        dict: A schedule where each activity has a room, time, and facilitator.
-    """
+   
     schedule = {}
 
     for activity_name in ACTIVITIES:
@@ -134,15 +125,7 @@ def create_random_schedule() -> dict:
 
 
 def create_initial_population(size: int = 250) -> list:
-    """
-    Create the initial population of random schedules.
-
-    Args:
-        size (int): Number of schedules to generate. Assignment says N >= 250.
-
-    Returns:
-        list: A list of schedule dictionaries.
-    """
+    
     if size < 1:
         raise ValueError("Population size must be at least 1.")
 
