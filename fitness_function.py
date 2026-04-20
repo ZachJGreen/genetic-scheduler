@@ -6,9 +6,18 @@ def fitness_calculate_final_score():
 def fitness_facilitator_load_check():
     return 0
 
+
 # Issue 5 https://github.com/ZachJGreen/genetic-scheduler/issues/5
 def fitness_activity_facilitator_check():
     return 0
+
+def facilitator_check(activity, facilitator, preferred, other):
+    
+    if facilitator in preferred.get(activity, []):
+        return 0.5
+    if facilitator in other.get(activity, []):
+        return 0.2
+    return -0.1
 
 # Issue 4 https://github.com/ZachJGreen/genetic-scheduler/issues/4
 def fitness_room_capacity_check():
