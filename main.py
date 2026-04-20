@@ -1,11 +1,8 @@
 from schedule import Schedule
-
+from Activity import create_initial_population, print_population_summary
 def main():
-    schedule = Schedule()
-    schedule.generate_schedule()
 
-    for activity in schedule.schedule:
-        print(f"Activity: {activity.name}, Room: {activity.room}, Time: {activity.time}, Facilitator: {activity.facilitator}")
-
+    first_gen = create_initial_population()
+    print_population_summary(first_gen)
 if __name__ == "__main__":
     main()
