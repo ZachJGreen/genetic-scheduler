@@ -121,7 +121,7 @@ def create_random_schedule() -> dict:
     return schedule
 
 
-def create_initial_population(size: int = 250) -> list:
+def create_initial_population(size: int = 500) -> list:
     
     if size < 1:
         raise ValueError("Population size must be at least 1.")
@@ -167,16 +167,3 @@ def print_population_summary(population: list) -> None:
         print(f"Activities per schedule: {len(population[0])}")
 
 
-# =========
-# Test code
-# =========
-
-if __name__ == "__main__":
-    # Test one random schedule
-    sample_schedule = create_random_schedule()
-    print("SAMPLE RANDOM SCHEDULE")
-    print_schedule(sample_schedule)
-
-    # Test initial population
-    population = create_initial_population(250)
-    print_population_summary(population)
