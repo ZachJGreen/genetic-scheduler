@@ -8,7 +8,7 @@ def fitness_calculate_final_score(population):
         score = 0
         score += fitness_facilitator_load_check(schedule)
 
-        score += fitness_activity_facilitator_check()
+        score += fitness_activity_facilitator_check(schedule)
 
         score += fitness_room_capacity_check(schedule)
 
@@ -53,16 +53,22 @@ def fitness_facilitator_load_check(schedule):
 
 
 # Issue 5 https://github.com/ZachJGreen/genetic-scheduler/issues/5
-def fitness_activity_facilitator_check():
-    return 0
+def fitness_activity_facilitator_check(schedule):
+    score = 0
 
-def facilitator_check(activity, facilitator, preferred, other):
-    
-    if facilitator in preferred.get(activity, []):
-        return 0.5
-    if facilitator in other.get(activity, []):
-        return 0.2
-    return -0.1
+    for activity_name, assignment in schedule.items():
+        facilitator = assignment["facilitator"]
+        preferred = ACTIVITIES[activity_name]["preferred_facilitators"]
+        other = ACTIVITIES[activity_name]["other_facilitators"]
+
+        if facilitator in preferred:
+            score += 0.5
+        elif facilitator in other:
+            score += 0.2
+        else:
+            score -= 0.1
+
+    return score
 
 # Issue 4 https://github.com/ZachJGreen/genetic-scheduler/issues/4
 def fitness_room_capacity_check(schedule):
