@@ -1,49 +1,84 @@
 from Activity import Activity
+from core_data import ACTIVITIES
 
 
 class Schedule:
-    activities = [
-        "SLA101A", "SLA101B",
-        "SLA191A", "SLA191B",
-        "SLA201", "SLA291",
-        "SLA303", "SLA304",
-        "SLA394", "SLA449",
-        "SLA451"
-    ]
+    def __init__(self, assignments=None, score=0):
+        self.assignments = assignments if assignments is not None else {}
+        self.score = score
 
-    def __init__(self):
-        self.schedule = []
+    @classmethod
+    def random_schedule(cls):
+        assignments = {}
 
-    def generate_schedule(self):
-        self.schedule = []  
+        for activity_name in ACTIVITIES:
+            activity = Activity(activity_name)
+            activity.roll()
+            assignments[activity_name] = activity.to_dict()
 
-        for activity_name in self.activities:
-            new_activity = Activity(activity_name)
-            new_activity.roll()
-            self.schedule.append(new_activity)
+        return cls(assignments=assignments)
 
-        return self.schedule
+    def items(self):
+        return self.assignments.items()
 
-    def print_schedule(self):
-        print("-" * 70)
-        print(f"{'Activity':<10} {'Room':<12} {'Time':<6} {'Facilitator':<12}")
-        print("-" * 70)
+    def values(self):
+        return self.assignments.values()
 
-        for activity in self.schedule:
-            print(
-                f"{activity.name:<10} "
-                f"{activity.room:<12} "
-                f"{str(activity.time):<6} "
-                f"{activity.facilitator:<12}"
-            )
+    def to_dict(self):
+        return dict(self.assignments)
 
-        print("-" * 70)
+    def set_score(self, score):
+        self.score = score
 
-    def get_schedule(self):
-        return self.schedule
+
+def create_random_schedule():
+    return Schedule.random_schedule()
+
+
+def create_initial_population(size=500):
+    if size < 1:
+        raise ValueError("Population size must be at least 1.")
+
+    population = []
+    for _ in range(size):
+        population.append(create_random_schedule())
+
+    return population
+
+
+def print_schedule(schedule):
+    print("-" * 72)
+    print(f"{'Activity':<10} {'Room':<12} {'Time':<6} {'Facilitator':<12}")
+    print("-" * 72)
+
+    for activity_name, assignment in schedule.items():
+        print(
+            f"{activity_name:<10} "
+            f"{assignment['room']:<12} "
+            f"{assignment['time']:<6} "
+            f"{assignment['facilitator']:<12}"
+        )
+
+    print("-" * 72)
+
+
+def print_population_summary(population):
+    print("Population created successfully.")
+    print(f"Total schedules: {len(population)}")
+
+    if population:
+        first_schedule = population[0]
+        if hasattr(first_schedule, "assignments"):
+            activity_count = len(first_schedule.assignments)
+        else:
+            activity_count = len(first_schedule)
+        print(f"Activities per schedule: {activity_count}")
+
+
+def sort_population_by_score(population, descending=True):
+    return sorted(population, key=lambda schedule: schedule.score, reverse=descending)
 
 
 if __name__ == "__main__":
-    test_schedule = Schedule()
-    test_schedule.generate_schedule()
-    test_schedule.print_schedule()
+    test_schedule = create_random_schedule()
+    print_schedule(test_schedule)
