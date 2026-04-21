@@ -1,5 +1,7 @@
 from schedule import create_initial_population, print_population_summary, sort_population_by_score
 from fitness_function import fitness_calculate_final_score
+from reproduction_phase import reproduce
+
 def main():
 
     # Initial Population Creation
@@ -13,6 +15,9 @@ def main():
     
     # Take the top 50% of the population for the next generation
     top_performers = sorted_gen[: len(sorted_gen) // 2]
+    
+    # Reproduction to create the next generation
+    offspring = reproduce(top_performers)
 
     print_population_summary(first_gen)
 
