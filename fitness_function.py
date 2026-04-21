@@ -1,5 +1,5 @@
 from Activity import *
-from core_data import FACILITATORS, TIMES
+from core_data import ACTIVITIES, FACILITATORS, ROOMS, TIMES
 
 # Issue 2 https://github.com/ZachJGreen/genetic-scheduler/issues/2
 def fitness_calculate_final_score(population):
@@ -7,6 +7,10 @@ def fitness_calculate_final_score(population):
     for schedule in population:
         score = 0
         score += fitness_facilitator_load_check(schedule)
+
+        score += fitness_activity_facilitator_check()
+
+        score += fitness_room_capacity_check(schedule)
 
         schedule_scores.append(score)
     return schedule_scores
@@ -61,8 +65,23 @@ def facilitator_check(activity, facilitator, preferred, other):
     return -0.1
 
 # Issue 4 https://github.com/ZachJGreen/genetic-scheduler/issues/4
-def fitness_room_capacity_check():
-    return 0
+def fitness_room_capacity_check(schedule):
+    score = 0
+
+    for activity_name, assignment in schedule.items():
+        expected_enrollment = ACTIVITIES[activity_name]["expected_enrollment"]
+        room_capacity = ROOMS[assignment["room"]]
+
+        if room_capacity < expected_enrollment:
+            score -= 0.5
+        elif room_capacity > expected_enrollment * 3:
+            score -= 0.4
+        elif room_capacity > expected_enrollment * 1.5:
+            score -= 0.2
+        else:
+            score += 0.3
+
+    return score
 
 # Issue 3 https://github.com/ZachJGreen/genetic-scheduler/issues/3
 def fitness_time_conflict_check():
