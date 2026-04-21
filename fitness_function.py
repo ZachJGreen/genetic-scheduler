@@ -12,6 +12,7 @@ def fitness_calculate_final_score(population):
 
         score += fitness_room_capacity_check(schedule)
 
+        score += fitness_time_conflict_check(schedule)
         schedule_scores.append(score)
     return schedule_scores
 
@@ -90,7 +91,16 @@ def fitness_room_capacity_check(schedule):
     return score
 
 # Issue 3 https://github.com/ZachJGreen/genetic-scheduler/issues/3
-def fitness_time_conflict_check():
-    return 0
+def fitness_time_conflict_check(schedule):
+    seen_time_room_pairs = set()
 
+    for assignment in schedule.values():
+        time_room_pair = (assignment["time"], assignment["room"])
+
+        if time_room_pair in seen_time_room_pairs:
+            return -0.5
+
+        seen_time_room_pairs.add(time_room_pair)
+
+    return 0
 
