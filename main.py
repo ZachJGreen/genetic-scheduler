@@ -1,6 +1,7 @@
 import sys
 
 from schedule import create_initial_population, sort_population_by_score
+from schedule import print_schedule
 from fitness_function import fitness_calculate_final_score
 from reproduction_phase import reproduce
 
@@ -30,14 +31,16 @@ def main(generations=100):
             break
 
         top_performers = sorted_gen[:top_count]
-        population = reproduce(top_performers)
+        population = reproduce(top_performers, target_size=len(sorted_gen))
 
         if not population:
             print("No offspring generated; stopping early.")
             break
 
     final_sorted = sort_population_by_score(population)
-    print(f"Final top score after {generation} generation(s): {final_sorted[0].score}")
+    best = final_sorted[0]
+    print(f"\nBest schedule after {generation} generation(s) (score: {best.score}):")
+    print_schedule(best)
 
 
 

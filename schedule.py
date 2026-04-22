@@ -1,5 +1,5 @@
 from Activity import Activity
-from core_data import ACTIVITIES
+from core_data import ACTIVITIES, TIMES
 
 
 class Schedule:
@@ -47,11 +47,23 @@ def create_initial_population(size=500):
 
 
 def print_schedule(schedule):
+    assignments = schedule.assignments if hasattr(schedule, "assignments") else schedule
+    time_index = {time_slot: idx for idx, time_slot in enumerate(TIMES)}
+
     print("-" * 72)
     print(f"{'Activity':<10} {'Room':<12} {'Time':<6} {'Facilitator':<12}")
     print("-" * 72)
 
-    for activity_name, assignment in schedule.items():
+    sorted_assignments = sorted(
+        assignments.items(),
+        key=lambda item: (
+            time_index.get(item[1]["time"], len(TIMES)),
+            item[1]["room"],
+            item[0],
+        ),
+    )
+
+    for activity_name, assignment in sorted_assignments:
         print(
             f"{activity_name:<10} "
             f"{assignment['room']:<12} "
