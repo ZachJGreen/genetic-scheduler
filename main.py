@@ -19,7 +19,7 @@ def main():
     # Reproduction to create the next generation
     offspring = reproduce(top_performers)
 
-    print_population_summary(first_gen)
+    
 
     for score in gen_scores:
         print(score)

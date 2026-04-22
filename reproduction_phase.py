@@ -1,5 +1,6 @@
 import random
 from schedule import Schedule
+from core_data import FACILITATORS, ROOMS, TIMES
 
 
 def pairs(population):
@@ -42,18 +43,46 @@ def reproduce(population):
         for i, activity in enumerate(activity_names):
             if i < midpoint:
                 # Before midpoint: child1 gets from parent1, child2 gets from parent2
-                child1_assignments[activity] = p1_assignments[activity]
-                child2_assignments[activity] = p2_assignments[activity]
+                child1_assignments[activity] = dict(p1_assignments[activity])
+                child2_assignments[activity] = dict(p2_assignments[activity])
             else:
                 # After midpoint: child1 gets from parent2, child2 gets from parent1
-                child1_assignments[activity] = p2_assignments[activity]
-                child2_assignments[activity] = p1_assignments[activity]
+                child1_assignments[activity] = dict(p2_assignments[activity])
+                child2_assignments[activity] = dict(p1_assignments[activity])
         
         child1 = Schedule(assignments=child1_assignments)
         child2 = Schedule(assignments=child2_assignments)
         
         offspring.append(child1)
         offspring.append(child2)
-    
+
+    mutate_population(offspring)
     return offspring
+
+
+def mutate_schedule(schedule, mutation_rate=0.01):
+    if random.random() >= mutation_rate:
+        return schedule
+
+    activity_names = list(schedule.assignments.keys())
+    if not activity_names:
+        return schedule
+
+    random_activity = random.choice(activity_names)
+    random_attribute = random.choice(["room", "time", "facilitator"])
+
+    if random_attribute == "room":
+        schedule.assignments[random_activity]["room"] = random.choice(list(ROOMS.keys()))
+    elif random_attribute == "time":
+        schedule.assignments[random_activity]["time"] = random.choice(TIMES)
+    else:
+        schedule.assignments[random_activity]["facilitator"] = random.choice(FACILITATORS)
+
+    return schedule
+
+
+def mutate_population(population, mutation_rate=0.01):
+    for schedule in population:
+        mutate_schedule(schedule, mutation_rate)
+    return population
 
