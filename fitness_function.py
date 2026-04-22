@@ -1,4 +1,3 @@
-from Activity import *
 from core_data import ACTIVITIES, FACILITATORS, ROOMS, TIMES
 
 # Issue 2 https://github.com/ZachJGreen/genetic-scheduler/issues/2
@@ -13,6 +12,12 @@ def fitness_calculate_final_score(population):
         score += fitness_room_capacity_check(schedule)
 
         score += fitness_time_conflict_check(schedule)
+
+        if hasattr(schedule, "set_score"):
+            schedule.set_score(score)
+        elif hasattr(schedule, "score"):
+            schedule.score = score
+
         schedule_scores.append(score)
     return schedule_scores
 
