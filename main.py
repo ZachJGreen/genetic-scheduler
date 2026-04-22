@@ -10,14 +10,40 @@ def main(generations=100):
         raise ValueError("Generation count must be at least 1.")
 
     population = create_initial_population()
+    previous_best_fitness = None
 
     for generation in range(1, generations + 1):
-        fitness_calculate_final_score(population)
-        sorted_gen = sort_population_by_score(population)
+        gen_scores = fitness_calculate_final_score(population)
+        if not gen_scores:
+            print("No schedules available for fitness evaluation.")
+            break
 
-        top_score = sorted_gen[0].score
-        if generation == 1 or generation == generations or generation % 10 == 0:
-            print(f"Generation {generation}: top score = {top_score}")
+        sorted_gen = sort_population_by_score(population)
+        best = sorted_gen[0]
+        best_fitness = best.score
+        average_fitness = sum(gen_scores) / len(gen_scores)
+        worst_fitness = min(gen_scores)
+
+        if previous_best_fitness is None:
+            improvement_text = "N/A (first generation)"
+        elif previous_best_fitness == 0:
+            if best_fitness == 0:
+                improvement_text = "0.00%"
+            else:
+                improvement_text = "inf%"
+        else:
+            improvement = ((best_fitness - previous_best_fitness) / abs(previous_best_fitness)) * 100
+            improvement_text = f"{improvement:.2f}%"
+
+        print(f"\nGeneration {generation} Fitness Matrix")
+        print(f"Best fitness: {best_fitness:.2f}")
+        print(f"Average fitness: {average_fitness:.2f}")
+        print(f"Worst fitness: {worst_fitness:.2f}")
+        print(f"Generation-to-generation improvement: {improvement_text}")
+        print("Best schedule:")
+        print_schedule(best)
+
+        previous_best_fitness = best_fitness
 
         if generation == generations:
             break
@@ -39,8 +65,7 @@ def main(generations=100):
 
     final_sorted = sort_population_by_score(population)
     best = final_sorted[0]
-    print(f"\nBest schedule after {generation} generation(s) (score: {best.score}):")
-    print_schedule(best)
+    print(f"\nFinal best score after {generation} generation(s): {best.score:.2f}")
 
 
 
