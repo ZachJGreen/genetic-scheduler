@@ -18,47 +18,71 @@ def pairs(population):
     return paired
 
 
-def reproduce(population, target_size=None):
+def reproduce(population, target_size=None, mutation_rate=0.01):
 
     offspring = []
-
+    
     parent_pairs = pairs(population)
-    if not parent_pairs:
-        return offspring
-
-    if target_size is None:
-        target_size = len(population) * 2
-
-    pair_index = 0
-    while len(offspring) < target_size:
-        parent1, parent2 = parent_pairs[pair_index % len(parent_pairs)]
-        pair_index += 1
-
+    
+    for parent1, parent2 in parent_pairs:
+        # Get the assignments as dicts
         p1_assignments = parent1.to_dict()
         p2_assignments = parent2.to_dict()
-
+        
+        # Get list of activity names (same for both parents)
         activity_names = list(p1_assignments.keys())
+        
+        # Select a random crossover point (midpoint)
+        # randint(1, n-1) ensures at least one activity from each parent
         midpoint = random.randint(1, len(activity_names) - 1)
-
+        
+        # Create two children by crossover
         child1_assignments = {}
         child2_assignments = {}
-
+        
         for i, activity in enumerate(activity_names):
             if i < midpoint:
+                # Before midpoint: child1 gets from parent1, child2 gets from parent2
                 child1_assignments[activity] = dict(p1_assignments[activity])
                 child2_assignments[activity] = dict(p2_assignments[activity])
             else:
+                # After midpoint: child1 gets from parent2, child2 gets from parent1
                 child1_assignments[activity] = dict(p2_assignments[activity])
                 child2_assignments[activity] = dict(p1_assignments[activity])
-
+        
         child1 = Schedule(assignments=child1_assignments)
         child2 = Schedule(assignments=child2_assignments)
-
+        
         offspring.append(child1)
-        if len(offspring) < target_size:
-            offspring.append(child2)
+        offspring.append(child2)
 
-    mutate_population(offspring)
+    if target_size is not None:
+        if target_size < 1:
+            return []
+
+        while len(offspring) < target_size and len(population) >= 2:
+            extra_pair = pairs(population)
+            if not extra_pair:
+                break
+
+            parent1, parent2 = extra_pair[0]
+            p1_assignments = parent1.to_dict()
+            p2_assignments = parent2.to_dict()
+            activity_names = list(p1_assignments.keys())
+            midpoint = random.randint(1, len(activity_names) - 1)
+
+            child_assignments = {}
+            for i, activity in enumerate(activity_names):
+                if i < midpoint:
+                    child_assignments[activity] = dict(p1_assignments[activity])
+                else:
+                    child_assignments[activity] = dict(p2_assignments[activity])
+
+            offspring.append(Schedule(assignments=child_assignments))
+
+        offspring = offspring[:target_size]
+
+    mutate_population(offspring, mutation_rate)
     return offspring
 
 
