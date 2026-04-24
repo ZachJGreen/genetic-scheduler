@@ -18,7 +18,7 @@ def pairs(population):
     return paired
 
 
-def reproduce(population, target_size=None):
+def reproduce(population, target_size=None, mutation_rate=0.01):
 
     offspring = []
     
@@ -82,7 +82,7 @@ def reproduce(population, target_size=None):
 
         offspring = offspring[:target_size]
 
-    mutate_population(offspring)
+    mutate_population(offspring, mutation_rate=mutation_rate)
     return offspring
 
 
